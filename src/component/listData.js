@@ -6,7 +6,7 @@ const ListData = () => {
 
   useEffect(() => {
     getData();
-  }, [data]);
+  }, []);
 
   const getData = async () => {
     const responsed = await axios.get("https://glittering-bublanina-abf8d9.netlify.app/.netlify/functions/api/user");

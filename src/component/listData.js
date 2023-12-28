@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 const ListData = () => {
   const [data, setData] = useState([]);
 
@@ -9,23 +10,28 @@ const ListData = () => {
   }, []);
 
   const getData = async () => {
-    const responsed = await axios.get("https://glittering-bublanina-abf8d9.netlify.app/.netlify/functions/api/user");
-    setData(responsed.data);
-    console.log(responsed.data);
+    try {
+      const response = await axios.get("https://glittering-bublanina-abf8d9.netlify.app/.netlify/functions/api/user");
+      setData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
   const deleteData = async (id) => {
     try {
       await axios.delete(`https://glittering-bublanina-abf8d9.netlify.app/.netlify/functions/api/user/${id}`);
       getData();
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting data:", error);
     }
   };
 
   return (
-    <div className="columns">
-      <div className="column is-half">
-        <table className="table is-striped is-fullwidth mt-5">
+    <div className="columns is-centered mt-6">
+      <div className="column is-three-quarters">
+        <table className="table is-striped is-fullwidth">
           <thead>
             <tr>
               <th>No</th>
@@ -40,32 +46,30 @@ const ListData = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((user, index) => {
-              return (
-                <tr key={user._id}>
-                  <td>{index + 1}</td>
-                  <td>{user.nama}</td>
-                  <td>{user.nim}</td>
-                  <td>{user.jurusan}</td>
-                  <td>{user.fakultas}</td>
-                  <td>{user.alamt}</td>
-                  <td>{user.universitas}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <Link to={`/edit/${user._id}`} className="button is-success is-small">
-                      Edit Data
-                    </Link>
-                    <button onClick={() => deleteData(user._id)} className="button is-success is-small">
-                      delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            {data.map((user, index) => (
+              <tr key={user._id}>
+                <td>{index + 1}</td>
+                <td>{user.nama}</td>
+                <td>{user.nim}</td>
+                <td>{user.jurusan}</td>
+                <td>{user.fakultas}</td>
+                <td>{user.alamat}</td>
+                <td>{user.universitas}</td>
+                <td>{user.email}</td>
+                <td>
+                  <Link to={`/edit/${user._id}`} className="button is-success is-small mr-2">
+                    Edit Data
+                  </Link>
+                  <button onClick={() => deleteData(user._id)} className="button is-danger is-small">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-        <div>
-          <Link to={"/add"} className="button is-success">
+        <div className="mt-4">
+          <Link to="/add" className="button is-success">
             Add New Data
           </Link>
         </div>
